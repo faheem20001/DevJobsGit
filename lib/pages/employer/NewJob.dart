@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -17,6 +19,7 @@ final TextEditingController jobtitleController=TextEditingController();
 final TextEditingController companynameController=TextEditingController();
 final TextEditingController jobdescController=TextEditingController();
 final TextEditingController pdateController=TextEditingController();
+String? imageUrl;
 
 class _NewJobPageState extends State<NewJobPage> {
 final posted=DateTime.now();
@@ -36,9 +39,25 @@ final posted=DateTime.now();
       });
     }
   }
+void getData()async{
 
 
+  final DocumentSnapshot userDoc=await FirebaseFirestore.instance.collection('user').doc(FirebaseAuth.instance.currentUser!.uid).get();
 
+  setState(() {
+    imageUrl=userDoc.get('userImage');
+    //jobid=jobDoc.get('uploadedBy');
+
+
+  });
+
+}
+
+@override
+void initState() {
+  super.initState();
+  getData();
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -228,7 +247,7 @@ final posted=DateTime.now();
                   child: InkWell(
                     onTap: (){
                       uploadJob upljob=uploadJob();
-                      upljob.uploadJ(context: context);
+                      upljob.uploadJ(context: context,imageUrl: imageUrl);
                     },
                     child: Container(
                       width: 350,

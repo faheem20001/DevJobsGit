@@ -5,10 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../common/register/RegisterUser.dart';
-String? ImageUrl;
+
 
 class AuthService {
-
+  String? ImageUrl;
   FirebaseAuth _auth = FirebaseAuth.instance;
   Future<User?> createUser(UserModel user) async {
     try {

@@ -19,6 +19,7 @@ class _MyJobPageState extends State<MyJobPage> {
   User? user=FirebaseAuth.instance.currentUser;
   String? imageUrl;
   String? jobid;
+  String? userType;
   void initState() {
 
     super.initState();
@@ -31,6 +32,7 @@ class _MyJobPageState extends State<MyJobPage> {
 
     setState(() {
       imageUrl=userDoc.get('userImage');
+      userType = userDoc.get('usertype');
       //jobid=jobDoc.get('uploadedBy');
 
 
@@ -43,6 +45,7 @@ class _MyJobPageState extends State<MyJobPage> {
 
       backgroundColor: Colors.white,
       appBar: AppBar(
+
 
         backgroundColor: Color.fromRGBO(130, 168, 205,1),
         actions: [
@@ -60,8 +63,8 @@ class _MyJobPageState extends State<MyJobPage> {
                 child: Stack(
                   children: [
                     Positioned(
-                      top: 40,
-                      right: 20,
+                      top: 30,
+                      right: 30,
                       child: Icon(
                         Icons.add,
                         size: 60,
@@ -74,38 +77,16 @@ class _MyJobPageState extends State<MyJobPage> {
           )
         ],
         leadingWidth: 100,
-        leading: Container(
-          width: 200,
-          height: 100,
-          child: Stack(
-            children: [
-              Positioned(
-                left: 20,
-                top: 40,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      return ProfilePage(user: user!,uid: user!.uid,);
-                    }));
-                  },
-                  child: Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
-                        ),
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(imageUrl == null||imageUrl!.isEmpty
-                              ? 'https://placehold.co/600x400.png'
-                              : imageUrl!),
-                          fit: BoxFit.fill,
-                        )),
-                  ),
-                ),
-              )
-            ],
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Icon(
+              Icons.arrow_back_ios_sharp,
+              size: 35,
+            ),
           ),
         ),
         elevation: 0,
@@ -129,7 +110,7 @@ class _MyJobPageState extends State<MyJobPage> {
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40),bottomRight: Radius.circular(40))
               ),
 
-              height: 70,
+              height: 10,
 
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -140,8 +121,8 @@ class _MyJobPageState extends State<MyJobPage> {
               ),
             ),
 
-            backgroundColor: Colors.transparent,
-            toolbarHeight:50,
+            backgroundColor:Color.fromRGBO(130, 168, 205,1),
+            toolbarHeight:5,
 
             centerTitle: false,
 

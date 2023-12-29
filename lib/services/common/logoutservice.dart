@@ -1,3 +1,4 @@
+import 'package:devjobs/common/login/LoginPage.dart';
 import 'package:devjobs/userstate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class logout{
                 _auth.signOut();
                 Navigator.canPop(context)?Navigator.pop(context):null;
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                  return UserState();
+                  return LoginPage();
                 }));
               }, child:Text("Yes"))],
 

@@ -22,7 +22,8 @@ class _RegisterUserState extends State<RegisterUser> {
   bool _obscure=true;
   List<String> usertypes=<String>[
     "Freelancer",
-    "Employer"
+    "Employer",
+    "Admin"
   ];
   var selectedValue;
   final _regKey = GlobalKey<FormState>();

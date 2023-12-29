@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:devjobs/pages/admin/AdminHome.dart';
+import 'package:devjobs/pages/employer/Navigation.dart';
 import 'package:devjobs/pages/freelancer/Home.dart';
 import 'package:devjobs/services/common/logoutservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../../pages/employer/HomePage.dart';
 
 class ProfilePage extends StatefulWidget {
   User? user = FirebaseAuth.instance.currentUser;
@@ -218,7 +222,22 @@ class _ProfilePageState extends State<ProfilePage> {
         leadingWidth: 90,
         leading: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+              if(userType=='Freelancer')
+                {
+                    return HomePage();
+                }else if(userType=='Employer')
+                {
+                  return NavigationPage();
+
+                }else if(userType=='Admin'){
+                    return AdminHome();
+              }else {
+                return ProfilePage(user:widget.user , uid:widget.uid );
+              }
+            }
+            )
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(10.0),

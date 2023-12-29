@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:devjobs/pages/admin/AdminNavPage.dart';
 import 'package:devjobs/pages/employer/Navigation.dart';
 import 'package:devjobs/pages/freelancer/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,12 +35,28 @@ class _UserStateState extends State<UserState> {
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
         );
-      } else {
+      } else if(userType=='Employer'){
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => NavigationPage()),
         );
-      }
+      }else if(userType=="Admin")
+      {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AdminNavPage(),
+          ),
+        );
+      }else
+        {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginPage(),
+            ),
+          );
+        }
     }
   }
 

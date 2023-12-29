@@ -26,6 +26,7 @@ class _AdminHomeState extends State<AdminHome> {
     return Scaffold(
       body: Center(
         child: Container(
+
         child: Row(
           children: [
             Padding(
@@ -41,7 +42,7 @@ class _AdminHomeState extends State<AdminHome> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                      child: Center(child: Text("Add User"),)
+                      child: Center(child: Text("Add User",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18),),)
                       ,height: 160,width: 150,decoration: BoxDecoration(
                         color: Colors.blueGrey,
                         borderRadius: BorderRadius.circular(18)
@@ -59,7 +60,7 @@ class _AdminHomeState extends State<AdminHome> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        child: Center(child: Text("Add Contract"),)
+                        child: Center(child: Text("Add Contract",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
                         ,height: 160,width: 150,decoration: BoxDecoration(
                           color: Colors.blueGrey,
                           borderRadius: BorderRadius.circular(18)
@@ -76,7 +77,7 @@ class _AdminHomeState extends State<AdminHome> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        child: Center(child: Text("Add Jobs"),)
+                        child: Center(child: Text("Add Jobs",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
                         ,height: 160,width: 150,decoration: BoxDecoration(
                           color: Colors.blueGrey,
                           borderRadius: BorderRadius.circular(18)
@@ -87,72 +88,74 @@ class _AdminHomeState extends State<AdminHome> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                children: [
-                  GestureDetector(
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                    return UserListPage();
-                  }));
-                },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        child: Center(child: Text("View Users"),)
-                        ,height: 160,width: 150,decoration: BoxDecoration(
-                          color: Colors.blueGrey,
-                          borderRadius: BorderRadius.circular(18)
-                      ),),
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                      return UserListPage();
+                    }));
+                  },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: Center(child: Text("View Users",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
+                          ,height: 160,width: 150,decoration: BoxDecoration(
+                            color: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(18)
+                        ),),
+                      ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                        return ViewContractPage();
-                      }));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        child: Center(child: Text("View Contracts"),)
-                        ,height: 160,width: 150,decoration: BoxDecoration(
-                          color: Colors.blueGrey,
-                          borderRadius: BorderRadius.circular(18)
-                      ),),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                          return ViewContractPage();
+                        }));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: Center(child: Text("View Contracts",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
+                          ,height: 160,width: 150,decoration: BoxDecoration(
+                            color: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(18)
+                        ),),
+                      ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)
-                      {
-                        return JobListPage();
-                      }
-                      )
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        child: Center(child: Text("View Jobs"),)
-                        ,height: 160,width: 150,decoration: BoxDecoration(
-                          color: Colors.blueGrey,
-                          borderRadius: BorderRadius.circular(18)
-                      ),),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)
+                        {
+                          return JobListPage();
+                        }
+                        )
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: Center(child: Text("View Jobs",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
+                          ,height: 160,width: 150,decoration: BoxDecoration(
+                            color: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(18)
+                        ),),
+                      ),
                     ),
-                  ),
 
-                ],
+                  ],
+                ),
               ),
             ),
-            
+
 
 
           ],
         ),
-          height: 580,
-          width: 400,
+          height: double.infinity,
+          width: double.infinity,
 
           decoration: BoxDecoration(
               color: Colors.black12,

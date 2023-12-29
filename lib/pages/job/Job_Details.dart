@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../common/profile/ProfilePage.dart';
+import '../admin/AdminHome.dart';
 import '../employer/Navigation.dart';
 
 class Job_DetailsPage extends StatefulWidget {
@@ -38,12 +40,15 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
   bool isAvailable = false;
   bool showComment = false;
   String? userType;
-
+  String? userid;
+  User? user;
+  String? jobid;
   void getJobData() async {
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('user')
         .doc(widget.uploadedBy)
         .get();
+    user=FirebaseAuth.instance!.currentUser;
 
     if (userDoc == null) {
       return;
@@ -51,6 +56,8 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
       setState(() {
         userType = userDoc.get('usertype');
         author = userDoc.get('email');
+        userid=userDoc.get('id');
+
         userImageUrl = userDoc.get('userImage');
       });
       print(userImageUrl);
@@ -64,6 +71,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
     } else {
       setState(() {
         email = jobDatabase.get('email');
+        jobid=jobDatabase.get('jobid');
         jobTitle = jobDatabase.get('Job Title');
         jobDesc = jobDatabase.get('Job Description');
         deadDate = jobDatabase.get('deadDate');
@@ -701,7 +709,19 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
         leading: IconButton(
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-             return userType == 'Employer' ? NavigationPage() : HomePage();
+              if(userType=='Freelancer')
+              {
+                return HomePage();
+              }else if(userType=='Employer')
+              {
+                return NavigationPage();
+
+              }else if(userType=='Admin'){
+                return AdminHome();
+              }else {
+                return Job_DetailsPage(jobid: widget.jobid,uploadedBy: widget.uploadedBy,);
+              }
+
             }));
           },
           icon: Icon(
