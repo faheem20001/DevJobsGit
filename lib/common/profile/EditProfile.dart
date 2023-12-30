@@ -4,36 +4,118 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devjobs/models/freelancer/user_model.dart';
 import 'package:devjobs/services/freelancer/authservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddUserPage extends StatefulWidget {
-  const AddUserPage({super.key});
+class EditProfile extends StatefulWidget {
+
+  final String? uid;
+  EditProfile({super.key,required this.uid});
 
   @override
-  State<AddUserPage> createState() => _AddUserPageState();
+  State<EditProfile> createState() => _EditProfileState();
 }
 File? ProfileImage;
 
+class _EditProfileState extends State<EditProfile> {
+  Future<void>change({
+   required String email,required String oldpassword,required String newpassword
+})async{
+    try{
+      var cred=EmailAuthProvider.credential(email: email,
+          password: oldpassword);
+      await FirebaseAuth.instance.currentUser!
+          .reauthenticateWithCredential(cred)
+          .then((value)
+      async{
+        await FirebaseAuth.instance.currentUser!
+            .updatePassword(newpassword);
+        FirebaseFirestore.instance
+            .collection('user')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          'email':email,
 
-class _AddUserPageState extends State<AddUserPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _cpasswordController = TextEditingController();
-  TextEditingController _skillController = TextEditingController();
+
+          'password':newpassword
+        }
+        );
+
+          });
+          }
+      catch(e){
+      print(e.toString());
+      }
+
+
+
+  }
+  TextEditingController _emailController = TextEditingController(text: '');
+  TextEditingController _passwordController = TextEditingController(text: '');
+  TextEditingController _cpasswordController = TextEditingController(text: '');
+  TextEditingController _skillController = TextEditingController(text: '');
+
+  String? uid;
+  bool isLoading=true;
   bool _obscure=true;
-  String? ImageUrl;
   List<String> usertypes=<String>[
     "Freelancer",
     "Employer",
-    "Admin"
+
   ];
   var selectedValue;
+  User? user=FirebaseAuth.instance.currentUser;
   final _regKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+    getData();
+  }
+  void getData() async {
+    try {
+
+
+      final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('user')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      if (userDoc == null) {
+        CircularProgressIndicator();
+      } else {
+        final _uid = FirebaseAuth.instance.currentUser!.uid;
+
+
+
+
+        setState(() {
+          uid=userDoc.get('id');
+          _emailController.text=userDoc.get('email');
+          //skills = List.from(userDoc['skills']);
+          _passwordController.text=userDoc.get('password');
+          _cpasswordController.text=userDoc.get('password');
+          selectedValue = userDoc.get('usertype');
+          _skillController.text = userDoc.get('skills');
+
+
+
+        }
+
+        );
+        print(_emailController);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   void _Image_dialogue()
   {
@@ -313,59 +395,26 @@ class _AddUserPageState extends State<AddUserPage> {
                     top: 700,
                     left: 20,
                     child: InkWell(
-                      onTap: () {
+                      onTap: () async{
                         if(_regKey.currentState!.validate())
                         {
-
-
-                          var skills = _skillController.text.split(",");
-
-                          UserModel user = UserModel(
-
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                            createdAt: DateTime.now(),
-                            status: 1,
-                            skills: skills,
-                            userType: selectedValue,
+                           FirebaseFirestore.instance
+                              .collection('user')
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .update({
+                            'email':_emailController.text,
+                            'usertype':selectedValue.toString(),
+                            'skills':_skillController.text.split(","),
+                             'password':_passwordController.text
+                          }
                           );
 
-                          setState(() async{
-
-                            try{
-
-                              FirebaseApp tempApp = await Firebase.initializeApp(name: "flutter", options: Firebase.app().options);
-
-                              UserCredential newUser = await FirebaseAuth.instanceFor(app: tempApp).createUserWithEmailAndPassword(email:_emailController.text , password: _passwordController.text);
-                              final _uid=newUser.user!.uid;
-                              final ref=FirebaseStorage.instance.ref().child('userImages').child(newUser.user!.uid+".jpg");
-                              await ref.putFile(ProfileImage!);
-
-                              ImageUrl =await ref.getDownloadURL();
-                            FirebaseFirestore.instance.collection('user').doc(_uid).set({
-                              'id':_uid,
-                              'email':_emailController.text,
-                              'userImage':ImageUrl,
-                              'createdAt':DateTime.now(),
-                              'usertype':selectedValue,
-                              'password':_passwordController.text,
-                              'skills':_skillController.text,
-                              "name":user.name??"Guest",
-                            });
-                            Fluttertoast.showToast(
-                              msg: 'User has been created',
-                              toastLength: Toast.LENGTH_LONG,
-                              backgroundColor: Colors.green,
-                              fontSize: 18,
-                            );
-                            Navigator.pop(context);
-                            }catch(e)
-                            {
-                              print('ERROR WRITING TO FIRESTORE$e');
-                            }
-                          });
-
-
+                           await change(email: _emailController.text,oldpassword: _passwordController.text,newpassword:_cpasswordController.text,);
+                           Fluttertoast.showToast(
+                               msg: "The profile has been edited",
+                               toastLength: Toast.LENGTH_LONG,
+                               backgroundColor: Colors.green,
+                               fontSize: 18);
 
 
 
@@ -377,7 +426,7 @@ class _AddUserPageState extends State<AddUserPage> {
                       },
                       child: Container(
                         child: Center(
-                            child: Text("ADD USER",
+                            child: Text("EDIT PROFILE",
                                 style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700))),

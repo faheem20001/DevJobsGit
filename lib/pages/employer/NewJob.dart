@@ -19,6 +19,7 @@ final TextEditingController jobtitleController=TextEditingController();
 final TextEditingController companynameController=TextEditingController();
 final TextEditingController jobdescController=TextEditingController();
 final TextEditingController pdateController=TextEditingController();
+var isValid=false;
 String? imageUrl;
 
 class _NewJobPageState extends State<NewJobPage> {
@@ -60,6 +61,7 @@ void initState() {
 }
   @override
   Widget build(BuildContext context) {
+    User? user=FirebaseAuth.instance.currentUser;
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
@@ -246,8 +248,21 @@ void initState() {
                   left: 40,
                   child: InkWell(
                     onTap: (){
-                      uploadJob upljob=uploadJob();
-                      upljob.uploadJ(context: context,imageUrl: imageUrl);
+                      setState(() {
+                        isValid=formKey.currentState!.validate();
+                        uploadJob upljob=uploadJob();
+                        upljob.uploadJ(context: context,
+                            imageUrl: imageUrl,
+                            uid: user!.uid,
+                            valid: isValid,
+                            jobtitle:jobtitleController.text,
+                            jobdesc:jobdescController.text,
+                            duration:dateController.text,
+                            deaddate:dateController.text,
+                            postdate:pdateController.text
+                        );
+                      });
+
                     },
                     child: Container(
                       width: 350,

@@ -20,16 +20,24 @@ class uploadJob{
 
   Future<dynamic> uploadJ({
     required context,
-    required imageUrl
+    required imageUrl,
+    required uid,
+    required valid,
+    required jobtitle,
+    required jobdesc,
+    required duration,
+    required deaddate,
+    required postdate,
+
 })
   async{
 
     final jobId=const Uuid().v4();
     User? user=FirebaseAuth.instance.currentUser;
-    final _uid=user!.uid;
 
-    final isValid=formKey.currentState!.validate();
-    if(isValid)
+
+
+    if(valid)
       {
         if(dateController.text=="Duration")
           {
@@ -50,18 +58,18 @@ class uploadJob{
 
           await FirebaseFirestore.instance.collection('jobs').doc(jobId).set({
             'jobid':jobId,
-            'uploadedBy':_uid,
+            'uploadedBy':uid,
 
-            'email':user.email,
-            'Job Title':jobtitleController.text,
-            'Job Description':jobdescController.text,
-            'Duration':dateController.text,
+            'email':user!.email,
+            'Job Title':jobtitle,
+            'Job Description':jobdesc,
+            'Duration':duration,
             'userImage':imageUrl.toString(),
             'applicants':0,
             'location':'',
-            'deadDate':dateController.text,
-            'postDate':pdateController.text,
-            'name':user.displayName,
+            'deadDate':deaddate,
+            'postDate':postdate,
+            'name':user!.displayName,
             'availability':true,
             'createdAt':DateTime.now().toString(),
 

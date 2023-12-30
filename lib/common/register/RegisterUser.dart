@@ -23,7 +23,7 @@ class _RegisterUserState extends State<RegisterUser> {
   List<String> usertypes=<String>[
     "Freelancer",
     "Employer",
-    "Admin"
+
   ];
   var selectedValue;
   final _regKey = GlobalKey<FormState>();

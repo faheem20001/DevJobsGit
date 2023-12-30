@@ -22,7 +22,7 @@ class _AdminNavPageState extends State<AdminNavPage> with SingleTickerProviderSt
 
     ),
 
-    AdminChat(),
+
 
 
   ];

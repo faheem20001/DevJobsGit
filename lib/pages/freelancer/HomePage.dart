@@ -10,15 +10,15 @@ import 'package:flutter/material.dart';
 
 import 'Home.dart';
 
-class HomePage extends StatefulWidget {
+class FHomePage extends StatefulWidget {
   final UserModel? data;
-  const HomePage({super.key, this.data});
+  const FHomePage({super.key, this.data});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<FHomePage> createState() => _FHomePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _FHomePageState extends State<FHomePage>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   List<Widget> _pages = <Widget>[
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage>
         leading: InkWell(
           onTap: (){
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (builder){
-              return ProfilePage(user: user!,uid: user!.uid,);
+              return ProfilePage(uid: user!.uid,);
             }));
           },
           child: Container(

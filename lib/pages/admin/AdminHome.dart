@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devjobs/pages/admin/AddJobPage.dart';
 import 'package:devjobs/pages/admin/AddUserPage.dart';
-import 'package:devjobs/pages/admin/CreateJobPage.dart';
+
 import 'package:devjobs/pages/admin/JobListPage.dart';
 import 'package:devjobs/pages/admin/UserListPage.dart';
-import 'package:devjobs/pages/admin/ViewContractPage.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -49,31 +49,18 @@ class _AdminHomeState extends State<AdminHome> {
                       ),),
                     ),
                   ),
-                  GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)
-                    {
-                      return CreateJobPage();
-                    }
-                    ));
-                  },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        child: Center(child: Text("Add Contract",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
-                        ,height: 160,width: 150,decoration: BoxDecoration(
-                          color: Colors.blueGrey,
-                          borderRadius: BorderRadius.circular(18)
-                      ),),
-                    ),
-                  ),
-                  GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)
-                    {
-                      return AddJobPage();
-                    }));
-                  },
+
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)
+                      {
+                      return AddJobPage(
+                      );
+                      }
+                      )
+                      )
+                      ;
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
@@ -102,29 +89,14 @@ class _AdminHomeState extends State<AdminHome> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
-                          child: Center(child: Text("View Users",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
+                          child: Center(child: Text("   View\n   Delete\n All Users ",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
                           ,height: 160,width: 150,decoration: BoxDecoration(
                             color: Colors.blueGrey,
                             borderRadius: BorderRadius.circular(18)
                         ),),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                          return ViewContractPage();
-                        }));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          child: Center(child: Text("View Contracts",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
-                          ,height: 160,width: 150,decoration: BoxDecoration(
-                            color: Colors.blueGrey,
-                            borderRadius: BorderRadius.circular(18)
-                        ),),
-                      ),
-                    ),
+
                     GestureDetector(
                       onTap: (){
                         Navigator.of(context).push(MaterialPageRoute(builder: (context)
@@ -137,7 +109,7 @@ class _AdminHomeState extends State<AdminHome> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
-                          child: Center(child: Text("View Jobs",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
+                          child: Center(child: Text("   View\n   Delete\n All Jobs ",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
                           ,height: 160,width: 150,decoration: BoxDecoration(
                             color: Colors.blueGrey,
                             borderRadius: BorderRadius.circular(18)
@@ -173,7 +145,7 @@ class _AdminHomeState extends State<AdminHome> {
           onTap: (){
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)
             {
-              return ProfilePage(user: user!,uid: user.uid!,);
+              return ProfilePage(uid: user!.uid,);
             }));
           },
           child: Icon(

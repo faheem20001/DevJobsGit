@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      return ProfilePage(user: user!,uid: user!.uid,);
+                      return ProfilePage(uid: user!.uid,);
                     }));
                   },
                   child: Container(

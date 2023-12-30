@@ -11,6 +11,7 @@ import 'package:devjobs/services/global_variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../pages/admin/AdminHome.dart';
 import '../../pages/employer/Navigation.dart';
 
 class LoginPage extends StatefulWidget {
@@ -51,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                         onTap: () {
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
-                            return AdminNavPage();
+                            return AdminHome();
                           }));
                         },
                         child: Text("LOGIN",

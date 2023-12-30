@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devjobs/pages/admin/AdminHome.dart';
 import 'package:devjobs/pages/employer/Navigation.dart';
-import 'package:devjobs/pages/freelancer/Home.dart';
+import 'package:devjobs/pages/freelancer/HomePage.dart';
 import 'package:devjobs/services/common/logoutservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../pages/employer/HomePage.dart';
+import 'EditProfile.dart';
 
 class ProfilePage extends StatefulWidget {
-  User? user = FirebaseAuth.instance.currentUser;
+
   final String? uid;
-  ProfilePage({required this.user, required this.uid});
+  ProfilePage({required this.uid});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -29,6 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Timestamp? dateCreated;
   DateTime? createdAt;
   String? pickdate;
+  String? uid;
 
   @override
   void initState() {
@@ -40,6 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void getData() async {
     try {
+
       isLoading = true;
       final DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('user')
@@ -49,27 +52,29 @@ class _ProfilePageState extends State<ProfilePage> {
       if (userDoc == null) {
         CircularProgressIndicator();
       } else {
-        final _uid = widget.uid;
+        //final _uid = FirebaseAuth.instance.currentUser!.uid;
 
 
 
 
         setState(() {
           dateCreated=userDoc.get('createdAt');
+          uid=userDoc.get('id');
+          email=userDoc.get('email');
 
           createdAt=dateCreated!.toDate();
           pickdate='${createdAt!.day}-${createdAt!.month}-${createdAt!.year}';
-          skills = List.from(userDoc['skills']);
+          //skills = List.from(userDoc['skills']);
           ImageUrl = userDoc.get('userImage');
           userType = userDoc.get('usertype');
           skills = userDoc.get('skills');
-          
-          setState(() {
-            isSameUser = _uid == widget.uid;
-          });
-        });
+
+
+        }
+        );
       }
     } catch (e) {
+      print(e);
     } finally {
       setState(() {
         isLoading = false;
@@ -79,6 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    User? user=FirebaseAuth.instance.currentUser;
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -112,22 +118,32 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Colors.blue,
                   ),
                   SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 2,
-                            ),
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: NetworkImage(ImageUrl == null
-                                  ? 'https://placehold.co/600x400.png'
-                                  : ImageUrl!),
-                              fit: BoxFit.fill,
-                            )),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)
+                        {
+                          return EditProfile(
+                            uid: user!.uid,
+                          );
+                        }));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                              ),
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage(ImageUrl == null
+                                    ? 'https://placehold.co/600x400.png'
+                                    : ImageUrl!),
+                                fit: BoxFit.fill,
+                              )),
+                        ),
                       ),
                     ),
                   ),
@@ -139,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Text(
-                      'N A M E : ${widget.user!.email}',
+                      'N A M E : ${email}',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
@@ -225,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
               if(userType=='Freelancer')
                 {
-                    return HomePage();
+                    return FHomePage();
                 }else if(userType=='Employer')
                 {
                   return NavigationPage();
@@ -233,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 }else if(userType=='Admin'){
                     return AdminHome();
               }else {
-                return ProfilePage(user:widget.user , uid:widget.uid );
+                return ProfilePage(uid:widget.uid );
               }
             }
             )

@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../pages/admin/AdminHome.dart';
 import '../../pages/admin/AdminNavPage.dart';
 
 class RouteService {
@@ -30,7 +31,7 @@ class RouteService {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => HomePage(),
+                builder: (context) => FHomePage(),
               ),
             );
           } else if(userType=='Employer'){
@@ -46,7 +47,7 @@ class RouteService {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => AdminNavPage(),
+              builder: (context) => AdminHome(),
             ),
           );
 

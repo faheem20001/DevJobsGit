@@ -33,7 +33,7 @@ class _UserStateState extends State<UserState> {
       if (userType == "Freelancer") {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => FHomePage()),
         );
       } else if(userType=='Employer'){
         Navigator.pushReplacement(

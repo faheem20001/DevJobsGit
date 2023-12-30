@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:devjobs/utils/widgets/admin_job_widget.dart';
 import 'package:flutter/material.dart';
 
 class JobListPage extends StatefulWidget {
@@ -11,74 +13,47 @@ class _JobListPageState extends State<JobListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(itemBuilder: (context,BuildContext)
-      {
-        return Stack(
-          children: [
-            Positioned(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 250,
-                  width: 500,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: FirebaseFirestore.instance.collection('jobs').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.data?.docs.isNotEmpty == true) {
+              return ListView.builder(
 
-                      borderRadius: BorderRadius.circular(20)
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-                left: 30,top: 30,
-                child: Row(
-                  children: [Icon(Icons.location_pin),Text(("India"))],
-                )
-            ),
-            Positioned(
-                left: 30,
-                top: 65
-                ,child: Text("TITLE OF THE JOB",style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: 20
-            ),)
-            ),
-            Positioned(left: 40,top: 90,child: Text("Description.......................................................\n"
-                "..........................................................................\n"
-                "..........................................................................\n"
-                "..........................................................................\n"
-                "..........................................................................")),
-            Positioned(top: 180,left: 25,child: Container(
-              child: Column(mainAxisAlignment:MainAxisAlignment.center,
-                children: [Text("VIEW",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 18),
-                ),
-                  Text("DETAILS",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15),)
-                ],
-              ),
-              width: 145,
-              height: 60,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
-                  color: Colors.lightBlueAccent
-              ),
-            )),
-            Positioned(top: 180,right: 25,child: Container(
-              child: Column(mainAxisAlignment:MainAxisAlignment.center,
-                children: [Text("DELETE",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 22),
-                ),
+                shrinkWrap: true,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return AdminJobWidget(
+                    jobId: snapshot.data!.docs[index]['jobid'],
+                    jobtitle: snapshot.data!.docs[index]['Job Title'],
+                    jobdesc: snapshot.data!.docs[index]['Job Description'],
+                    dateDuration: snapshot.data!.docs[index]['Duration'],
+                    uploadedBy: snapshot.data!.docs[index]['uploadedBy'],
 
-                ],
-              ),
-              width: 145,
-              height: 60,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
-                  color: Colors.redAccent
-              ),
-            )),
-          ],
-        );
-      }
+
+                  );
+                },
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
+                  child: Text("There are no jobs"),
+                ),
+              );
+            }
+          }
+          return Center(
+            child: Text(
+              "Something went wrong",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+          );
+        },
       ),
       appBar: AppBar(
         leadingWidth: 90,

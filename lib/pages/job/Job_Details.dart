@@ -43,18 +43,26 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
   String? userid;
   User? user;
   String? jobid;
+  String? userTypeCurrent;
   void getJobData() async {
+
+    User? user=FirebaseAuth.instance!.currentUser;
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('user')
         .doc(widget.uploadedBy)
         .get();
-    user=FirebaseAuth.instance!.currentUser;
+    final DocumentSnapshot userDocCurrent = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(user!.uid)
+        .get();
+
 
     if (userDoc == null) {
       return;
     } else {
       setState(() {
         userType = userDoc.get('usertype');
+        userTypeCurrent=userDocCurrent.get('usertype');
         author = userDoc.get('email');
         userid=userDoc.get('id');
 
@@ -125,7 +133,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 4),
                         child: Text(
-                          jobTitle == null ? "" : jobTitle!,
+                          jobTitle == null ? "ERROR TITLE" : jobTitle!,
                           maxLines: 3,
                           style: TextStyle(
                               color: Colors.white,
@@ -709,14 +717,14 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
         leading: IconButton(
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              if(userType=='Freelancer')
+              if(userTypeCurrent=='Freelancer')
               {
-                return HomePage();
-              }else if(userType=='Employer')
+                return FHomePage();
+              }else if(userTypeCurrent=='Employer')
               {
                 return NavigationPage();
 
-              }else if(userType=='Admin'){
+              }else if(userTypeCurrent=='Admin'){
                 return AdminHome();
               }else {
                 return Job_DetailsPage(jobid: widget.jobid,uploadedBy: widget.uploadedBy,);

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../../services/employer/deleteJobService.dart';
 
 
-class JobWidget extends StatefulWidget {
+class AdminJobWidget extends StatefulWidget {
   final String jobId;
   final String uploadedBy;
   final String jobtitle;
@@ -16,7 +16,7 @@ class JobWidget extends StatefulWidget {
 
 
 
-  const JobWidget({
+  const AdminJobWidget({
     required this.jobId,
     required this.jobtitle,
     required this.jobdesc,
@@ -24,29 +24,31 @@ class JobWidget extends StatefulWidget {
     required this.uploadedBy,
 
 
-});
+  });
 
 
 
   @override
-  State<JobWidget> createState() => _JobWidgetState();
+  State<AdminJobWidget> createState() => _AdminJobWidgetState();
 
 }
 
-class _JobWidgetState extends State<JobWidget> {
+class _AdminJobWidgetState extends State<AdminJobWidget> {
   String? userType;
+  String? uuid;
   void getData() async
   {
     User? user=FirebaseAuth.instance!.currentUser;
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('user')
-        .doc(widget.uploadedBy)
+        .doc(user!.uid)
         .get();
     if (userDoc == null) {
       return;
     } else {
       setState(() {
         userType = userDoc.get('usertype');
+        uuid=userDoc.get('id');
 
 
 
@@ -69,12 +71,12 @@ class _JobWidgetState extends State<JobWidget> {
       onTap: ()
       {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
-          Job_DetailsPage(uploadedBy: widget.uploadedBy,jobid: widget.jobId)
+            Job_DetailsPage(uploadedBy: widget.uploadedBy,jobid: widget.jobId)
         ));
       },
       onLongPress: (){
         delete_job jobserv=delete_job();
-        jobserv.deletejob(context: context,uuid: widget.uploadedBy,jobid: widget.jobId,userType: userType );
+        jobserv.deletejob(context: context,uuid: uuid,jobid: widget.jobId,userType: userType );
       },
       child: Stack(
         children: [
@@ -97,8 +99,8 @@ class _JobWidgetState extends State<JobWidget> {
               left: 30,top: 30,
               child: Row(
                 children: [Icon(Icons.location_pin,color: Colors.blueAccent,),Text(("India" ),style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600
                 ),
                 )],
               )
@@ -107,15 +109,15 @@ class _JobWidgetState extends State<JobWidget> {
               left: 30,
               top: 65
               ,child: Text(widget.jobtitle,style: TextStyle(
-          color: Colors.white,
+              color: Colors.white,
               fontWeight: FontWeight.w900,
               fontSize: 20
           ),)
           ),
           Positioned(left: 40,top: 90,child: Container(width: 350,child: Text(widget.jobdesc,textAlign: TextAlign.start,maxLines: 3,overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w500
+                color: Colors.white,
+                fontWeight: FontWeight.w500
             ),))),
           Positioned(top: 180,left: 25,child: Container(
             child: Column(mainAxisAlignment:MainAxisAlignment.center,
