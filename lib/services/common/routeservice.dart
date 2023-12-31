@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devjobs/common/login/LoginPage.dart';
 import 'package:devjobs/models/freelancer/user_model.dart';
+import 'package:devjobs/pages/employer/HomePage.dart';
 import 'package:devjobs/pages/employer/Navigation.dart';
 import 'package:devjobs/pages/freelancer/HomePage.dart';
 import 'package:devjobs/services/freelancer/authservice.dart';
@@ -38,7 +39,7 @@ class RouteService {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => NavigationPage(),
+                builder: (context) => HomePage(),
               ),
             );
           }

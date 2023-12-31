@@ -86,6 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     User? user=FirebaseAuth.instance.currentUser;
     return Scaffold(
+      backgroundColor: Colors.lightBlue[50],
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -244,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     return FHomePage();
                 }else if(userType=='Employer')
                 {
-                  return NavigationPage();
+                  return HomePage();
 
                 }else if(userType=='Admin'){
                     return AdminHome();

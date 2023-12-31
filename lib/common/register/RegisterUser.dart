@@ -25,7 +25,7 @@ class _RegisterUserState extends State<RegisterUser> {
     "Employer",
 
   ];
-  var selectedValue;
+  String? selectedValue;
   final _regKey = GlobalKey<FormState>();
 
   void _Image_dialogue()
@@ -291,7 +291,7 @@ class _RegisterUserState extends State<RegisterUser> {
                                     child: Text(value));
                               }).toList(),
 
-                          onChanged: (newvalue){
+                          onChanged: (String? newvalue){
                             setState(() {
                               selectedValue=newvalue;
 

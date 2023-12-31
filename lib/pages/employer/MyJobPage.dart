@@ -43,43 +43,17 @@ class _MyJobPageState extends State<MyJobPage> {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      backgroundColor: Colors.white,
+      backgroundColor:Colors.lightBlue[50],
       appBar: AppBar(
-
-
+        elevation: 0,
         backgroundColor: Color.fromRGBO(130, 168, 205,1),
         actions: [
-          InkWell(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return NewJobPage();
-              }));
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 15.0),
-              child: Container(
-                height: 100,
-                width: 100,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      top: 30,
-                      right: 30,
-                      child: Icon(
-                        Icons.add,
-                        size: 60,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          )
+
         ],
-        leadingWidth: 100,
+        leadingWidth: 90,
         leading: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
           child: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -89,28 +63,26 @@ class _MyJobPageState extends State<MyJobPage> {
             ),
           ),
         ),
-        elevation: 0,
-        centerTitle: true,
         automaticallyImplyLeading: false,
-        toolbarHeight: 120,
-        title: Text(
-          "MY JOBS",
-          style: TextStyle(fontSize: 30),
-        ),
+        centerTitle: true,
+        toolbarHeight: 100,
+        title: Text('MY JOBS'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       body:  CustomScrollView(
 
         slivers: [
           SliverAppBar(
+        elevation: 0,
             floating: false,
             pinned: false,
             flexibleSpace: Container(
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(130, 168, 205,1),
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40),bottomRight: Radius.circular(40))
+                  color: Colors.transparent
+
               ),
 
-              height: 10,
+
 
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -121,13 +93,13 @@ class _MyJobPageState extends State<MyJobPage> {
               ),
             ),
 
-            backgroundColor:Color.fromRGBO(130, 168, 205,1),
-            toolbarHeight:5,
+            backgroundColor:Colors.lightBlueAccent[50],
+            toolbarHeight:0,
 
             centerTitle: false,
 
             automaticallyImplyLeading: false,
-            expandedHeight: 30,
+
 
 
           ),

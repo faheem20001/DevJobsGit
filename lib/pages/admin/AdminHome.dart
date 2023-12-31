@@ -24,6 +24,9 @@ class _AdminHomeState extends State<AdminHome> {
   Widget build(BuildContext context) {
     User? user=FirebaseAuth.instance.currentUser;
     return Scaffold(
+      backgroundColor: Colors.lightBlue[50],
+
+
       body: Center(
         child: Container(
 
@@ -44,7 +47,7 @@ class _AdminHomeState extends State<AdminHome> {
                       child: Container(
                       child: Center(child: Text("Add User",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18),),)
                       ,height: 160,width: 150,decoration: BoxDecoration(
-                        color: Colors.blueGrey,
+                          color: Color.fromRGBO(130, 168, 205,1),
                         borderRadius: BorderRadius.circular(18)
                       ),),
                     ),
@@ -66,7 +69,7 @@ class _AdminHomeState extends State<AdminHome> {
                       child: Container(
                         child: Center(child: Text("Add Jobs",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
                         ,height: 160,width: 150,decoration: BoxDecoration(
-                          color: Colors.blueGrey,
+                          color: Color.fromRGBO(130, 168, 205,1),
                           borderRadius: BorderRadius.circular(18)
                       ),),
                     ),
@@ -91,7 +94,7 @@ class _AdminHomeState extends State<AdminHome> {
                         child: Container(
                           child: Center(child: Text("   View\n   Delete\n All Users ",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
                           ,height: 160,width: 150,decoration: BoxDecoration(
-                            color: Colors.blueGrey,
+                            color: Color.fromRGBO(130, 168, 205,1),
                             borderRadius: BorderRadius.circular(18)
                         ),),
                       ),
@@ -111,7 +114,7 @@ class _AdminHomeState extends State<AdminHome> {
                         child: Container(
                           child: Center(child: Text("   View\n   Delete\n All Jobs ",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18)),)
                           ,height: 160,width: 150,decoration: BoxDecoration(
-                            color: Colors.blueGrey,
+                            color: Color.fromRGBO(130, 168, 205,1),
                             borderRadius: BorderRadius.circular(18)
                         ),),
                       ),
@@ -131,13 +134,16 @@ class _AdminHomeState extends State<AdminHome> {
 
           decoration: BoxDecoration(
               color: Colors.black12,
-            border: Border.all(width: 3),
+            border: Border.all(width: 2.5),
             borderRadius: BorderRadius.circular(22)
           ),
         ),
       ),
 
       appBar: AppBar(
+        elevation: 0,
+
+        backgroundColor: Color.fromRGBO(130, 168, 205,1),
       leadingWidth: 90,
       leading: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -156,7 +162,7 @@ class _AdminHomeState extends State<AdminHome> {
       ),
       automaticallyImplyLeading: false,
       centerTitle: true,
-        toolbarHeight: 120,
+        toolbarHeight: 130,
         title: Text('Admin Controls'),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20)

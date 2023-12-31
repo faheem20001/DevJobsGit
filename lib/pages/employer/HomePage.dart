@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      backgroundColor: Color.fromRGBO(174, 205, 250,0.5),
+      backgroundColor: Colors.lightBlue[50],
       appBar: AppBar(
 
         backgroundColor: Color.fromRGBO(130, 168, 205,1),
@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("ONGOING",style: TextStyle(fontSize: 18,color: Colors.white)),
+                            Text("MY",style: TextStyle(fontSize: 18,color: Colors.white)),
                             Text("JOBS",style: TextStyle(fontSize: 18,color: Colors.white))
                           ],
                         ),

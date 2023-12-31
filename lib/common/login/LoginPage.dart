@@ -265,28 +265,7 @@ class _LoginPageState extends State<LoginPage> {
                 ]),
               ),
             ),
-            Positioned(
-              top: 760,
-              left: 20,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-                    return NavigationPage();
-                  }));
-                },
-                child: Container(
-                  child: Center(
-                      child: Text("AS EMPLOYER",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w700))),
-                  width: 380,
-                  height: 60,
-                  decoration: BoxDecoration(
-                      color: Color(0xFF81D4FA),
-                      borderRadius: BorderRadius.circular(40)),
-                ),
-              ),
-            ),
+
           ],
         ),
       ),

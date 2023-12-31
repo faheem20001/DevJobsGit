@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devjobs/pages/job/Job_Details.dart';
 import 'package:devjobs/services/employer/uploadJobService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -37,6 +38,9 @@ class UserWidget extends StatefulWidget {
 class _UserWidgetState extends State<UserWidget> {
   String? imgUrl;
   String? jobid;
+  String? email;
+  String? password;
+  String? uid;
   void initState() {
 
     super.initState();
@@ -45,12 +49,17 @@ class _UserWidgetState extends State<UserWidget> {
   void getData()async{
 
 
-    final DocumentSnapshot userDoc=await FirebaseFirestore.instance.collection('user').doc(FirebaseAuth.instance.currentUser!.uid).get();
+    final DocumentSnapshot currentuserDoc=await FirebaseFirestore.instance.collection('user').doc(FirebaseAuth.instance.currentUser!.uid).get();
     //final DocumentSnapshot jobDoc=await FirebaseFirestore.instance.collection('user').doc(FirebaseAuth.instance.currentUser!.uid).get();
+    final DocumentSnapshot WidgetuserDoc=await FirebaseFirestore.instance.collection('user').doc(widget.userId).get();
 
     setState(() {
       //imgUrl=userDoc.get('userImage');
       //jobid=jobDoc.get('uploadedBy');
+      email=WidgetuserDoc.get('email');
+      password=WidgetuserDoc.get('password');
+      uid=WidgetuserDoc.get('id');
+
 
 
     });
@@ -114,22 +123,32 @@ class _UserWidgetState extends State<UserWidget> {
           right: 133,
           child: InkWell(
             onTap: ()
-            {
-              FirebaseFirestore.instance
-                  .collection('user')
-                  .doc(widget.userId)
-                  .delete()
-                  .then((value) {
-                Fluttertoast.showToast(
-                  msg: 'User has been deleted',
-                  toastLength: Toast.LENGTH_LONG,
-                  backgroundColor: Colors.grey,
-                  fontSize: 18,
-                );
-                setState(() {
+            async{
+              try{
+                FirebaseFirestore.instance
+                    .collection('user')
+                    .doc(widget.userId)
+                    .delete()
+                    .then((value) async{
+                      User? currentUser=FirebaseAuth.instance.currentUser;
+                  if(currentUser!=null && email!=null && password!=null){
+
+
+                    setState(() {
+                      Fluttertoast.showToast(
+                        msg: 'User has been deleted',
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: Colors.grey,
+                        fontSize: 18,
+                      );
+                    });
+                  }
 
                 });
-              });
+              }catch(e){
+                print(e);
+              }
+
 
 
             },
