@@ -263,7 +263,7 @@ class _HomePageState extends State<HomePage> {
 
                       },
                       decoration: InputDecoration(
-                          hintText: 'Search here for jobs',
+                          hintText: 'Search here ',
                           prefixIcon: Icon(Icons.search_outlined),
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
