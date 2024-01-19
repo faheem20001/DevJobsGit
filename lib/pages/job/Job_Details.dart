@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devjobs/pages/employer/HomePage.dart';
+import 'package:devjobs/pages/freelancer/EmployerInfo.dart';
+import 'package:devjobs/pages/freelancer/Home.dart';
 import 'package:devjobs/pages/freelancer/HomePage.dart';
 import 'package:devjobs/services/freelancer/applyjobservice.dart';
 import 'package:devjobs/utils/widgets/comments_widget.dart';
@@ -45,8 +47,9 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
   User? user;
   String? jobid;
   String? userTypeCurrent;
+  String? priceRange;
   void getJobData() async {
-    User? user = FirebaseAuth.instance!.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('user')
         .doc(widget.uploadedBy)
@@ -67,7 +70,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
 
         userImageUrl = userDoc.get('userImage');
       });
-      print(userImageUrl);
+
     }
     final DocumentSnapshot jobDatabase = await FirebaseFirestore.instance
         .collection('jobs')
@@ -87,6 +90,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
         location = jobDatabase.get('location');
         postedDate = jobDatabase.get('postDate');
         userImageUrl = jobDatabase.get('userImage');
+        priceRange=jobDatabase.get('priceRange');
       });
     }
   }
@@ -152,7 +156,9 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              print(userImageUrl);
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                                return EmployerInfo(uploadedBy: widget.uploadedBy);
+                              }));
                             },
                             child: Container(
                               height: 60,
@@ -774,7 +780,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               if (userTypeCurrent == 'Freelancer') {
-                return FHomePage();
+                return Home();
               } else if (userTypeCurrent == 'Employer') {
                 return HomePage();
               } else if (userTypeCurrent == 'Admin') {
@@ -793,7 +799,12 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
             color: Colors.white,
           ),
         ),
-        title: Text("JOB DETAILS"),
+        title: Text("JOB DETAILS",style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 25
+        )
+          ,),
         centerTitle: true,
         automaticallyImplyLeading: false,
         toolbarHeight: 100,

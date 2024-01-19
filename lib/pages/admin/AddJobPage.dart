@@ -260,7 +260,8 @@ class _AddJobPageState extends State<AddJobPage> {
                           jobdesc:jobdescController.text,
                           duration:dateController.text,
                           deaddate:dateController.text,
-                          postdate:pdateController.text
+                          postdate:pdateController.text,
+                          pricerange: priceController.text
 
                         );
                       });

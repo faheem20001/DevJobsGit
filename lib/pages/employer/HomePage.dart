@@ -17,14 +17,48 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  TextEditingController _searchController=TextEditingController();
+  List _allJobs=[];
+  List _resultList=[];
   User? user=FirebaseAuth.instance.currentUser;
   String? imageUrl;
   String? jobid;
+  var loadjob;
+
+  @override
   void initState() {
 
     super.initState();
     getData();
+    getAllJobs();
+
+    _searchController.addListener(_onsearchChanged);
+
   }
+  _onsearchChanged() {
+    searchresultlist();
+    print(_searchController.text);
+  }
+  searchJobs(String query) {
+    return _allJobs.where((job) {
+      final title = job['Job Title'].toString().toLowerCase();
+      return title.contains(query.toLowerCase());
+    }).toList();
+  }
+
+  searchresultlist() {
+    var showResults = [];
+    if (_searchController.text != "") {
+      showResults = searchJobs(_searchController.text);
+    } else {
+      showResults = List.from(_allJobs);
+    }
+    setState(() {
+      _resultList = showResults;
+    });
+  }
+
+
   void getData()async{
 
 
@@ -32,11 +66,21 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       imageUrl=userDoc.get('userImage');
+      loadjob=getAllJobs;
       //jobid=jobDoc.get('uploadedBy');
 
 
     });
 
+  }
+  getAllJobs()async{
+    final uid=await FirebaseAuth.instance.currentUser;
+    var data=await FirebaseFirestore.instance.collection('jobs').get();
+    setState(() {
+      _allJobs=data.docs;
+    });
+    searchresultlist();
+    return data.docs;
   }
   @override
   Widget build(BuildContext context) {
@@ -61,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                 child: Stack(
                   children: [
                     Positioned(
-                      top: 40,
+                      top: 25,
                       right: 20,
                       child: Icon(
                         Icons.add,
@@ -112,10 +156,10 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         centerTitle: true,
         automaticallyImplyLeading: false,
-        toolbarHeight: 146,
+        toolbarHeight: 130,
         title: Text(
           "DashBoard",
-          style: TextStyle(fontSize: 30),
+          style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Colors.white),
         ),
       ),
       body:  CustomScrollView(
@@ -130,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40),bottomRight: Radius.circular(40))
               ),
 
-              height: 100,
+              height: 80,
 
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -147,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                         height: 80,
                         width: 180,
                         decoration: BoxDecoration(
-                            color: Colors.blueAccent,
+                            color: Colors.black38,
                             borderRadius: BorderRadius.circular(15)
                         ),
 
@@ -155,8 +199,8 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("MY",style: TextStyle(fontSize: 18,color: Colors.white)),
-                            Text("JOBS",style: TextStyle(fontSize: 18,color: Colors.white))
+                            Text("MY JOBS",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.white)),
+
                           ],
                         ),
                       ),
@@ -176,15 +220,14 @@ class _HomePageState extends State<HomePage> {
                         width: 150,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Colors.blueAccent
+                          color: Colors.black38,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("CREATE",style: TextStyle(fontSize: 15,color: Colors.white)),
-                            Text("NEW",style: TextStyle(fontSize: 15,color: Colors.white)),
-                            Text("JOB",style: TextStyle(fontSize: 15,color: Colors.white),),
+                            Text("CREATE NEW JOB",style: TextStyle(fontSize: 15,color: Colors.white,fontWeight: FontWeight.bold)),
+
 
                           ],
                         ),
@@ -196,7 +239,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             backgroundColor: Colors.transparent,
-            toolbarHeight: 120,
+            toolbarHeight: 80,
 
         centerTitle: false,
 
@@ -205,50 +248,97 @@ class _HomePageState extends State<HomePage> {
 
 
           ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: InkWell(
+                  onTap: (){
+
+                  },
+                  child: Container(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _searchController,
+                      validator: (value) {
+
+                      },
+                      decoration: InputDecoration(
+                          hintText: 'Search here for jobs',
+                          prefixIcon: Icon(Icons.search_outlined),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromRGBO(130, 168, 205,1), width: 3),
+                              borderRadius: BorderRadius.circular(40)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(0xFF81D4FA), width: 3),
+                              borderRadius: BorderRadius.circular(40))),
+                    ),
+                  ),
+                ),
+              ),
+            ),
 
             SliverToBoxAdapter(
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: FirebaseFirestore.instance.collection('jobs').snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.connectionState == ConnectionState.active) {
-                    if (snapshot.data?.docs.isNotEmpty == true) {
-                      return ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return JobWidget(
-                            jobId: snapshot.data!.docs[index]['jobid'],
-                            jobtitle: snapshot.data!.docs[index]['Job Title'],
-                            jobdesc: snapshot.data!.docs[index]['Job Description'],
-                            dateDuration: snapshot.data!.docs[index]['Duration'],
-                            uploadedBy: snapshot.data!.docs[index]['uploadedBy'],
+              child: ListView.builder(
+                physics: ScrollPhysics(),
+                shrinkWrap: true,
+
+                itemCount: _resultList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return JobWidget(
+                    jobId: _resultList[index]['jobid'],
+                    jobtitle: _resultList[index]['Job Title'],
+                    jobdesc: _resultList[index]['Job Description'],
+                    dateDuration: _resultList[index]['Duration'],
+                    uploadedBy: _resultList[index]['uploadedBy'],
 
 
-                          );
-                        },
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Center(
-                          child: Text("There are no jobs"),
-                        ),
-                      );
-                    }
-                  }
-                  return Center(
-                    child: Text(
-                      "Something went wrong",
-                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    ),
                   );
                 },
               ),
+              // child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              //   stream: FirebaseFirestore.instance.collection('jobs').snapshots(),
+              //   builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       return Center(
+              //         child: CircularProgressIndicator(),
+              //       );
+              //     } else if (snapshot.connectionState == ConnectionState.active) {
+              //       if (snapshot.data?.docs.isNotEmpty == true) {
+              //         return ListView.builder(
+              //           physics: ScrollPhysics(),
+              //         shrinkWrap: true,
+              //           itemCount: snapshot.data!.docs.length,
+              //           itemBuilder: (BuildContext context, int index) {
+              //             return JobWidget(
+              //               jobId: snapshot.data!.docs[index]['jobid'],
+              //               jobtitle: snapshot.data!.docs[index]['Job Title'],
+              //               jobdesc: snapshot.data!.docs[index]['Job Description'],
+              //               dateDuration: snapshot.data!.docs[index]['Duration'],
+              //               uploadedBy: snapshot.data!.docs[index]['uploadedBy'],
+              //
+              //
+              //             );
+              //           },
+              //         );
+              //       } else {
+              //         return Padding(
+              //           padding: const EdgeInsets.all(20.0),
+              //           child: Center(
+              //             child: Text("There are no jobs"),
+              //           ),
+              //         );
+              //       }
+              //     }
+              //     return Center(
+              //       child: Text(
+              //         "Something went wrong",
+              //         style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              //       ),
+              //     );
+              //   },
+              // ),
             ),
 
 

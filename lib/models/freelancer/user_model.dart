@@ -9,6 +9,7 @@ class UserModel{
   String?email;
   int?status;
   String? userType;
+  String? phone;
   var createdAt;
   List?skills;
 
@@ -16,7 +17,7 @@ class UserModel{
 
   UserModel({
 
-    this.email,this.id,this.name,this.createdAt,this.skills,this.status,this.password,this.userType
+    this.email,this.id,this.name,this.createdAt,this.skills,this.status,this.password,this.userType,this.phone
 });
 
 
@@ -33,7 +34,8 @@ class UserModel{
       skills: data['skills'],
       createdAt: data['createdAt'],
       status: data['status'],
-      userType: data['userType']
+      userType: data['userType'],
+        phone: data['phone']
 
 
 
@@ -61,7 +63,8 @@ class UserModel{
       "status":user.status,
       "skills":user.skills,
       'password':user.password,
-      'userType':user.userType
+      'userType':user.userType,
+      'phone':user.phone
     };
   }
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devjobs/pages/admin/AdminHome.dart';
 import 'package:devjobs/pages/employer/Navigation.dart';
+import 'package:devjobs/pages/freelancer/Home.dart';
 import 'package:devjobs/pages/freelancer/HomePage.dart';
 import 'package:devjobs/services/common/logoutservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,7 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
           //skills = List.from(userDoc['skills']);
           ImageUrl = userDoc.get('userImage');
           userType = userDoc.get('usertype');
-          skills = userDoc.get('skills');
+          skills = List.from(userDoc.get('skills'));
 
 
         }
@@ -186,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: Text(
-                                'SKILLS : ${skills.join(', ')}',
+                                'SKILLS : ${skills.join(',')}',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -242,7 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
               if(userType=='Freelancer')
                 {
-                    return FHomePage();
+                    return Home();
                 }else if(userType=='Employer')
                 {
                   return HomePage();

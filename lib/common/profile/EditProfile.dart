@@ -384,42 +384,45 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       Positioned(
                           top: 520,
-                          left: 110,
-                          child: Container(
-                            width: 220,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 3,
-                                color: Colors.blue
+                          left: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: 230,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 3,
+                                  color: Colors.blue
+                                ),
+
+                                borderRadius: BorderRadius.circular(40)
                               ),
 
-                              borderRadius: BorderRadius.circular(40)
-                            ),
-
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 12.0,bottom: 2),
-                                  child: Text(
-                                    "Slelect Role : ",
-                                    style: TextStyle(fontSize: 17),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 12.0,bottom: 2),
+                                    child: Text(
+                                      "Slelect Role : ",
+                                      style: TextStyle(fontSize: 17),
+                                    ),
                                   ),
-                                ),
-                                DropdownButton(
-                                  value: selectedValue,
-                                  items: usertypes.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                        value: value, child: Text(value));
-                                  }).toList(),
-                                  onChanged: (newvalue) {
-                                    setState(() {
-                                      selectedValue = newvalue;
-                                    });
-                                  },
-                                ),
-                              ],
+                                  DropdownButton(
+                                    value: selectedValue,
+                                    items: usertypes.map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                          value: value, child: Text(value));
+                                    }).toList(),
+                                    onChanged: (newvalue) {
+                                      setState(() {
+                                        selectedValue = newvalue;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           )),
                       Positioned(

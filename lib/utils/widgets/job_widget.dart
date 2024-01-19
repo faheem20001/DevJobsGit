@@ -35,6 +35,7 @@ class JobWidget extends StatefulWidget {
 
 class _JobWidgetState extends State<JobWidget> {
   String? userType;
+  String? priceRange;
   void getData() async
   {
     User? user=FirebaseAuth.instance!.currentUser;
@@ -42,11 +43,18 @@ class _JobWidgetState extends State<JobWidget> {
         .collection('user')
         .doc(widget.uploadedBy)
         .get();
-    if (userDoc == null) {
+    final DocumentSnapshot jobDatabase = await FirebaseFirestore.instance
+        .collection('jobs')
+        .doc(widget.jobId)
+        .get();
+
+    if (userDoc == null || jobDatabase==null) {
       return;
     } else {
       setState(() {
         userType = userDoc.get('usertype');
+        priceRange=jobDatabase.get('priceRange');
+
 
 
 
@@ -96,7 +104,7 @@ class _JobWidgetState extends State<JobWidget> {
           Positioned(
               left: 30,top: 30,
               child: Row(
-                children: [Icon(Icons.location_pin,color: Colors.blueAccent,),Text(("India" ),style: TextStyle(
+                children: [Icon(Icons.location_pin,color: Colors.black38,),Text(("India" ),style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600
                 ),
@@ -121,14 +129,14 @@ class _JobWidgetState extends State<JobWidget> {
             child: Column(mainAxisAlignment:MainAxisAlignment.center,
               children: [Text("Fixed Price",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),
               ),
-                Text("\$500",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.w500,fontSize: 15),)
+                Text("${priceRange}",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.w500,fontSize: 15),)
               ],
             ),
             width: 145,
             height: 60,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
-                color: Colors.blueAccent
+              color: Colors.black38,
             ),
           )),
           Positioned(top: 180,right: 25,child: Container(
@@ -142,7 +150,7 @@ class _JobWidgetState extends State<JobWidget> {
             height: 60,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
-                color: Colors.blueAccent
+              color: Colors.black38,
             ),
           )),
         ],

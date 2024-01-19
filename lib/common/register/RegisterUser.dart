@@ -19,6 +19,7 @@ class _RegisterUserState extends State<RegisterUser> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _cpasswordController = TextEditingController();
   TextEditingController _skillController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
   bool _obscure=true;
   List<String> usertypes=<String>[
     "Freelancer",
@@ -252,18 +253,45 @@ class _RegisterUserState extends State<RegisterUser> {
                       top: 460,
                       child: Container(
                         width: 380,
-                        height: 300,
+                        height: 200,
                         child: TextFormField(
                           controller: _skillController,
-                          minLines: 5,
+                          minLines: 1,
                           maxLines: 11,
                           decoration: InputDecoration(
                               hintText: 'Skills',
-                              prefixIcon: Padding(
-                                padding:
-                                    const EdgeInsets.only(bottom: 77, left: 10),
-                                child: Icon(Icons.local_activity_outlined),
-                              ),
+                              prefixIcon: Icon(Icons.local_activity_outlined),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xFF81D4FA), width: 3),
+                                  borderRadius: BorderRadius.circular(40)),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xFF81D4FA), width: 3),
+                                  borderRadius: BorderRadius.circular(40))),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 20,
+                      top: 530,
+                      child: Container(
+                        width: 380,
+                        child: TextFormField(
+                          controller: _phoneController,
+                          validator: (value) {
+                            // Define a regular expression for a valid phone number with country code
+                            RegExp phoneRegex = RegExp(r'^\+\d{1,3}\s?\d{1,14}$');
+
+                            if (value!.isEmpty || !phoneRegex.hasMatch(value)) {
+                              return "Invalid Phone Number";
+                            } else {
+                              return null;
+                            }
+                          },
+                          decoration: InputDecoration(
+                              hintText: 'Phone number with country code',
+                              prefixIcon: Icon(Icons.phone),
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Color(0xFF81D4FA), width: 3),
@@ -319,6 +347,7 @@ class _RegisterUserState extends State<RegisterUser> {
                               status: 1,
                               skills: skills,
                               userType: selectedValue,
+                              phone: _phoneController.text
                             );
 
                             AuthService _authService = AuthService();

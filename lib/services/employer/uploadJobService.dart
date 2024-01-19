@@ -28,6 +28,7 @@ class uploadJob{
     required duration,
     required deaddate,
     required postdate,
+    required pricerange
 
 })
   async{
@@ -72,6 +73,7 @@ class uploadJob{
             'name':user!.displayName,
             'availability':true,
             'createdAt':DateTime.now().toString(),
+            'priceRange':pricerange
 
 
 

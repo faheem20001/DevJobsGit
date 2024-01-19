@@ -13,8 +13,8 @@ class NewJobPage extends StatefulWidget {
 }
 
 final formKey = GlobalKey<FormState>();
-final TextEditingController dateController=TextEditingController(text: "Date");
-final TextEditingController priceController=TextEditingController(text: "Amount");
+final TextEditingController dateController=TextEditingController(text: "Select Date");
+final TextEditingController priceController=TextEditingController(text: "");
 final TextEditingController jobtitleController=TextEditingController();
 final TextEditingController companynameController=TextEditingController();
 final TextEditingController jobdescController=TextEditingController();
@@ -63,11 +63,17 @@ void initState() {
   Widget build(BuildContext context) {
     User? user=FirebaseAuth.instance.currentUser;
     return Scaffold(
-      backgroundColor: Colors.grey,
-      appBar: AppBar(
+      backgroundColor: Colors.lightBlue[50],
+      appBar: AppBar(elevation: 0,
+        backgroundColor: Color.fromRGBO(130, 168, 205,1),
         toolbarHeight: 80,
         centerTitle: true,
-        title: Text("N E W  J O B"),
+        title: Text("N E W  J O B",style: TextStyle(
+        color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 25
+        )
+        ),
       ),
       body: Form(
         key: formKey,
@@ -120,7 +126,7 @@ void initState() {
                                   borderRadius: BorderRadius.circular(30)),
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      width: 3, color: Colors.lightBlueAccent),
+                                      width: 3, color: Color.fromRGBO(130, 168, 205,1),),
                                   borderRadius: BorderRadius.circular(30)),
                               border: OutlineInputBorder(
                                   borderSide:
@@ -139,7 +145,7 @@ void initState() {
                               hintText: "Company Name",
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      width: 3, color: Colors.lightBlueAccent),
+                                      width: 3, color: Color.fromRGBO(130, 168, 205,1),),
                                   borderRadius: BorderRadius.circular(30)),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30))),
@@ -159,7 +165,7 @@ void initState() {
                               hintText: "Job Description",
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      width: 3, color: Colors.lightBlueAccent),
+                                      width: 3, color: Color.fromRGBO(130, 168, 205,1),),
                                   borderRadius: BorderRadius.circular(30)),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30))),
@@ -175,19 +181,20 @@ void initState() {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Fixed Price",
+                                  "Payment Range",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w600, fontSize: 18),
+                                      fontWeight: FontWeight.w600, fontSize: 16,color: Colors.white),
                                 ),
                                 SizedBox(
                                     height: 40,
                                     width: 100,
                                     child: TextFormField(
+
+                                    keyboardType: TextInputType.numberWithOptions(),
                                       controller: priceController,
                                       decoration: InputDecoration(
                                           border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30))),
+                                              )),
                                     ))
                               ],
                             ),
@@ -195,7 +202,7 @@ void initState() {
                             height: 80,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(18),
-                                color: Colors.lightBlueAccent),
+                                color: Color.fromRGBO(130, 168, 205,1),),
                           ),
                         ),
                         GestureDetector(
@@ -210,7 +217,7 @@ void initState() {
                                 children: [
                                   Text(
                                     "Duration",
-                                    style: TextStyle(
+                                    style: TextStyle(color: Colors.white,
                                         fontWeight: FontWeight.w600, fontSize: 18),
                                   ),
                                   SizedBox(
@@ -221,12 +228,9 @@ void initState() {
 
                                         controller: dateController,
                                         decoration: InputDecoration(
-                                          disabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(30)),
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(30))),
+
+                                         border: OutlineInputBorder()
+                                        ),
                                       ))
                                 ],
                               ),
@@ -234,7 +238,7 @@ void initState() {
                               height: 80,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(18),
-                                  color: Colors.lightBlueAccent),
+                                  color: Color.fromRGBO(130, 168, 205,1),),
                             ),
                           ),
                         )
@@ -259,7 +263,8 @@ void initState() {
                             jobdesc:jobdescController.text,
                             duration:dateController.text,
                             deaddate:dateController.text,
-                            postdate:pdateController.text
+                            postdate:pdateController.text,
+                          pricerange:priceController.text
                         );
                       });
 
@@ -269,11 +274,15 @@ void initState() {
                       height: 60,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: Colors.lightBlueAccent),
+                          color: Color.fromRGBO(130, 168, 205,1),),
                       child: Center(
                         child: Text(
                           "P O S T",
-                          style: TextStyle(fontSize: 20),
+                            style: TextStyle(
+                        color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        )
                         ),
                       ),
                     ),

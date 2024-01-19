@@ -66,7 +66,11 @@ class _MyJobPageState extends State<MyJobPage> {
         automaticallyImplyLeading: false,
         centerTitle: true,
         toolbarHeight: 100,
-        title: Text('MY JOBS'),
+        title: Text('MY JOBS',style: TextStyle(
+        color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 25
+        )),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       body:  CustomScrollView(

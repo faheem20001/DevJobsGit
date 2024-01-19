@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devjobs/pages/admin/AdminNavPage.dart';
 import 'package:devjobs/pages/employer/HomePage.dart';
 import 'package:devjobs/pages/employer/Navigation.dart';
+import 'package:devjobs/pages/freelancer/Home.dart';
 import 'package:devjobs/pages/freelancer/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class _UserStateState extends State<UserState> {
       if (userType == "Freelancer") {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => FHomePage()),
+          MaterialPageRoute(builder: (context) => Home()),
         );
       } else if(userType=='Employer'){
         Navigator.pushReplacement(

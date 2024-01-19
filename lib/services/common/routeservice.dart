@@ -3,6 +3,7 @@ import 'package:devjobs/common/login/LoginPage.dart';
 import 'package:devjobs/models/freelancer/user_model.dart';
 import 'package:devjobs/pages/employer/HomePage.dart';
 import 'package:devjobs/pages/employer/Navigation.dart';
+import 'package:devjobs/pages/freelancer/Home.dart';
 import 'package:devjobs/pages/freelancer/HomePage.dart';
 import 'package:devjobs/services/freelancer/authservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,7 +33,7 @@ class RouteService {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => FHomePage(),
+                builder: (context) => Home(),
               ),
             );
           } else if(userType=='Employer'){
