@@ -1,10 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:devjobs/pages/employer/FavJobs.dart';
+import 'package:devjobs/pages/employer/NewJob.dart';
+import 'package:devjobs/pages/freelancer/JobsForMe.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../../common/profile/ProfilePage.dart';
+import '../../services/common/NotificationProvider.dart';
+import '../../services/common/NotificationService.dart';
 import '../../utils/widgets/job_widget.dart';
-
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -12,28 +18,29 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   var loadjob;
   String? email;
   String? imageUrl;
   TabController? _tabController;
-  TextEditingController _searchController=TextEditingController();
-  List _allJobs=[];
-  List _resultList=[];
+  TextEditingController _searchController = TextEditingController();
+  List _allJobs = [];
+  List _resultList = [];
+
   @override
   void initState() {
-    // TODO: implement initState
-    _tabController=TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
     getAllJobs();
-
     _searchController.addListener(_onsearchChanged);
     getData();
   }
+
   _onsearchChanged() {
     searchresultlist();
     print(_searchController.text);
   }
+
   searchJobs(String query) {
     return _allJobs.where((job) {
       final title = job['Job Title'].toString().toLowerCase();
@@ -52,34 +59,63 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
       _resultList = showResults;
     });
   }
-  void getData()async{
-    final DocumentSnapshot userDoc=await FirebaseFirestore.instance.collection('user').doc(FirebaseAuth.instance.currentUser!.uid).get();
+
+  void getData() async {
+    final DocumentSnapshot userDoc =
+    await FirebaseFirestore.instance.collection('user').doc(FirebaseAuth.instance.currentUser!.uid).get();
 
     setState(() {
-      email=userDoc.get('email');
-      imageUrl=userDoc.get('userImage');
-      loadjob=getAllJobs;
+      email = userDoc.get('email');
+      imageUrl = userDoc.get('userImage');
+      loadjob = getAllJobs;
     });
   }
-  getAllJobs()async{
-    final uid=await FirebaseAuth.instance.currentUser;
-    var data=await FirebaseFirestore.instance.collection('jobs').get();
+
+  getAllJobs() async {
+    final uid = await FirebaseAuth.instance.currentUser;
+    var data = await FirebaseFirestore.instance.collection('jobs').get();
     setState(() {
-      _allJobs=data.docs;
+      _allJobs = data.docs;
     });
     searchresultlist();
     return data.docs;
   }
-  final _formkey=GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    User? user=FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
-
-        backgroundColor: Color.fromRGBO(130, 168, 205,1),
+        backgroundColor: Color.fromRGBO(130, 168, 205, 1),
         actions: [
-
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (builder) {
+                  return FavJobs();
+                }));
+              },
+              icon: Icon(
+                FontAwesomeIcons.heart,
+                size: 40,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (builder) {
+                  return JobsForMe();
+                }));
+              },
+              icon: Icon(
+                FontAwesomeIcons.brain,
+                size: 40,
+              ),
+            ),
+          )
         ],
         leadingWidth: 100,
         leading: Container(
@@ -89,7 +125,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
             children: [
               Positioned(
                 left: 20,
-                top: 40,
+                top: 35,
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -100,16 +136,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
-                        ),
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(imageUrl == null
-                              ? 'https://placehold.co/600x400.png'
-                              : imageUrl!),
-                          fit: BoxFit.fill,
-                        )),
+                      border: Border.all(
+                        width: 2,
+                      ),
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: NetworkImage(imageUrl == null
+                            ? 'https://placehold.co/600x400.png'
+                            : imageUrl!),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
                   ),
                 ),
               )
@@ -121,15 +158,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
         automaticallyImplyLeading: false,
         toolbarHeight: 130,
         title: Text(
-          "DashBoard",
-          style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Colors.white),
+          "DevJobs",
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
       body: CustomScrollView(
         slivers: [
-
           SliverToBoxAdapter(
-
             child: Column(
               children: [
                 Padding(
@@ -137,48 +172,43 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Hey! ${email}",style: TextStyle(
-                          fontSize: 23,fontWeight: FontWeight.w600
-                      ),),
+                      Text(
+                        "Hey! ${email}",
+                        style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
+                      ),
                     ],
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: InkWell(
-                    onTap: (){
-
-                    },
+                    onTap: () {},
                     child: Container(
                       width: 380,
                       child: TextFormField(
                         controller: _searchController,
-                        validator: (value) {
-
-                        },
+                        validator: (value) {},
                         decoration: InputDecoration(
-                            hintText: 'Search here',
-                            prefixIcon: Icon(Icons.search_outlined),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(130, 168, 205,1), width: 3),
-                                borderRadius: BorderRadius.circular(40)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFF81D4FA), width: 3),
-                                borderRadius: BorderRadius.circular(40))),
+                          hintText: 'Search here',
+                          prefixIcon: Icon(Icons.search_outlined),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color.fromRGBO(130, 168, 205, 1), width: 3),
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF81D4FA), width: 3),
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-
-
                 Column(
                   children: [
                     ListView.builder(
                       physics: ScrollPhysics(),
                       shrinkWrap: true,
-
                       itemCount: _resultList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return JobWidget(
@@ -187,73 +217,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                           jobdesc: _resultList[index]['Job Description'],
                           dateDuration: _resultList[index]['Duration'],
                           uploadedBy: _resultList[index]['uploadedBy'],
-
-
                         );
                       },
-                    )
-
-                    // Container(
-                    //   height: 1500,
-                    //   width: 400,
-                    //   child:
-                    //   StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                    //       stream: FirebaseFirestore.instance.collection('jobs').snapshots(),
-                    //       builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                    //         if (snapshot.connectionState == ConnectionState.waiting) {
-                    //           return Center(
-                    //             child: CircularProgressIndicator(),
-                    //           );
-                    //         } else if (snapshot.connectionState == ConnectionState.active) {
-                    //           if (snapshot.data?.docs.isNotEmpty == true) {
-                    //             return ListView.builder(
-                    //             shrinkWrap: true,
-                    //               scrollDirection: Axis.vertical,
-                    //               physics: NeverScrollableScrollPhysics(),
-                    //
-                    //               itemCount: snapshot.data!.docs.length,
-                    //               itemBuilder: (BuildContext context, int index) {
-                    //                 return JobWidget(
-                    //                   jobId: snapshot.data!.docs[index]['jobid'],
-                    //                   jobtitle: snapshot.data!.docs[index]['Job Title'],
-                    //                   jobdesc: snapshot.data!.docs[index]['Job Description'],
-                    //                   dateDuration: snapshot.data!.docs[index]['Duration'],
-                    //                   uploadedBy: snapshot.data!.docs[index]['uploadedBy'],
-                    //
-                    //
-                    //                 );
-                    //               },
-                    //             );
-                    //           } else {
-                    //             return Center(
-                    //               child: Text("There are no jobs"),
-                    //             );
-                    //           }
-                    //         }
-                    //         return Center(
-                    //           child: Text(
-                    //             "Something went wrong",
-                    //             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    //           ),
-                    //         );
-                    //       },
-                    //     ),
-                    //
-                    //
-                    //
-                    //   ),
-
+                    ),
                   ],
-                )
-
-
-
+                ),
               ],
             ),
-
           ),
         ],
       ),
     );
   }
 }
+

@@ -12,12 +12,13 @@ class UserModel{
   String? phone;
   var createdAt;
   List?skills;
+  String? cat;
 
 
 
   UserModel({
 
-    this.email,this.id,this.name,this.createdAt,this.skills,this.status,this.password,this.userType,this.phone
+    this.email,this.id,this.name,this.createdAt,this.skills,this.status,this.password,this.userType,this.phone,this.cat
 });
 
 
@@ -35,7 +36,8 @@ class UserModel{
       createdAt: data['createdAt'],
       status: data['status'],
       userType: data['userType'],
-        phone: data['phone']
+        phone: data['phone'],
+        cat: data['cat']
 
 
 
@@ -64,7 +66,8 @@ class UserModel{
       "skills":user.skills,
       'password':user.password,
       'userType':user.userType,
-      'phone':user.phone
+      'phone':user.phone,
+      'cat':user.cat
     };
   }
 

@@ -26,7 +26,32 @@ class _RegisterUserState extends State<RegisterUser> {
     "Employer",
 
   ];
+  List<String> developerCategories = <String>[
+    "Front-end Developer",
+    "Back-end Developer",
+    "Full Stack Developer",
+    "Mobile App Developer",
+    "Web Developer",
+    "UI/UX Designer",
+    "Game Developer",
+    "Software Engineer",
+    "DevOps Engineer",
+    "Database Administrator",
+    "Cloud Developer",
+    "Machine Learning Engineer",
+    "Blockchain Developer",
+    "Embedded Systems Developer",
+    "AR/VR Developer",
+    "Data Scientist",
+    "Quality Assurance Engineer",
+    "Cybersecurity Analyst",
+    "Systems Analyst",
+    "Others"
+
+  ];
+
   String? selectedValue;
+  String? selectedCatValue;
   final _regKey = GlobalKey<FormState>();
 
   void _Image_dialogue()
@@ -304,7 +329,8 @@ class _RegisterUserState extends State<RegisterUser> {
                       ),
                     ),
                     Positioned(
-                    top: 630, left: 145, child: Row(
+                    top: 630, left: 145, child:
+                    Row(
                       children: [
                         Text("Role:  ",style: TextStyle(
                           fontSize: 18
@@ -331,7 +357,45 @@ class _RegisterUserState extends State<RegisterUser> {
                     )
                     ),
                     Positioned(
-                      top: 700,
+                        top: 700, left: 20, child:
+                    Container(
+
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFF81D4FA), width: 3),
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Categories:  ",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          DropdownButton(
+                            value: selectedCatValue,
+                            items: developerCategories.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              },
+                            ).toList(),
+                            onChanged: (String? newvalue) {
+                              setState(() {
+                                selectedCatValue = newvalue;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+
+
+                    ),
+                    Positioned(
+                      top: 770,
                       left: 20,
                       child: InkWell(
                         onTap: () {
@@ -347,7 +411,8 @@ class _RegisterUserState extends State<RegisterUser> {
                               status: 1,
                               skills: skills,
                               userType: selectedValue,
-                              phone: _phoneController.text
+                              phone: _phoneController.text,
+                              cat:selectedCatValue
                             );
 
                             AuthService _authService = AuthService();

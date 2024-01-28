@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String? userType;
   bool isLoading = true;
   bool isSameUser = false;
-  List<String> skills = [];
+  String? skills ;
   String skillText = '';
   Timestamp? dateCreated;
   DateTime? createdAt;
@@ -68,7 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
           //skills = List.from(userDoc['skills']);
           ImageUrl = userDoc.get('userImage');
           userType = userDoc.get('usertype');
-          skills = List.from(userDoc.get('skills'));
+          skills = userDoc.get('cat');
 
 
         }
@@ -187,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: Text(
-                                'SKILLS : ${skills.join(',')}',
+                                'SKILLS : ${skills}',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,

@@ -8,6 +8,7 @@ import 'package:devjobs/utils/widgets/comments_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../common/profile/ProfilePage.dart';
@@ -15,10 +16,18 @@ import '../admin/AdminHome.dart';
 import '../employer/Navigation.dart';
 
 class Job_DetailsPage extends StatefulWidget {
+  final String jobId;
   final String uploadedBy;
-  final String jobid;
+  final String jobtitle;
+  final String jobdesc;
+  final String dateDuration;
 
-  Job_DetailsPage({required this.uploadedBy, required this.jobid});
+  Job_DetailsPage({
+    required this.jobId,
+    required this.jobtitle,
+    required this.jobdesc,
+    required this.dateDuration,
+    required this.uploadedBy,});
 
   @override
   State<Job_DetailsPage> createState() => _Job_DetailsPageState();
@@ -26,6 +35,7 @@ class Job_DetailsPage extends StatefulWidget {
 
 class _Job_DetailsPageState extends State<Job_DetailsPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool isFavorite=false;
 
   final TextEditingController _commentController = TextEditingController();
   bool _isCommenting = false;
@@ -74,7 +84,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
     }
     final DocumentSnapshot jobDatabase = await FirebaseFirestore.instance
         .collection('jobs')
-        .doc(widget.jobid)
+        .doc(widget.jobId)
         .get();
     if (jobDatabase == null) {
       return;
@@ -116,9 +126,89 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
       ],
     );
   }
+  Future<void> addfavjob() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    var currentUser = _auth.currentUser;
+    CollectionReference _collectionRef =
+    FirebaseFirestore.instance.collection('users-fav-jobs');
+
+    // Check if the jobid already exists in the user's collection
+    var existingDoc = await _collectionRef
+        .doc(currentUser!.uid)
+        .collection('jobs')
+        .where('jobid', isEqualTo: widget.jobId)
+        .get();
+
+    if (existingDoc.docs.isNotEmpty) {
+      // Job with the same jobid already exists
+      print("Job with jobid ${widget.jobId} already added to favorites.");
+      setState(() {
+        isFavorite = true; // Job is already a favorite
+      });
+      return;
+    }
+
+    // Add the job to favorites
+    await _collectionRef
+        .doc(currentUser.uid)
+        .collection('jobs')
+        .doc()
+        .set({
+      'jobid': widget.jobId,
+      'userid': FirebaseAuth.instance.currentUser!.uid,
+      'uploadedBy': widget.uploadedBy,
+      'Job Title': widget.jobtitle,
+      'Job Description': widget.jobdesc,
+      'Duration': widget.dateDuration,
+    });
+
+    setState(() {
+      isFavorite = true; // Job added to favorites
+    });
+    print("ADDED TO FAV JOB");
+  }
+  Future<void> removeFavJob() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    var currentUser = _auth.currentUser;
+    CollectionReference _collectionRef =
+    FirebaseFirestore.instance.collection('users-fav-jobs');
+
+    // Check if the jobid exists in the user's collection
+    var existingDoc = await _collectionRef
+        .doc(currentUser!.uid)
+        .collection('jobs')
+        .where('jobid', isEqualTo: widget.jobId)
+        .get();
+
+    if (existingDoc.docs.isEmpty) {
+      // Job with the specified jobid is not in favorites
+      print("Job with jobid ${widget.jobId} is not in favorites.");
+      setState(() {
+        isFavorite = false; // Job is not a favorite
+      });
+      return;
+    }
+
+    // Remove the job from favorites
+    await _collectionRef
+        .doc(currentUser.uid)
+        .collection('jobs')
+        .doc(existingDoc.docs.first.id)
+        .delete();
+
+    setState(() {
+      isFavorite = false; // Job removed from favorites
+    });
+    print("REMOVED FROM FAV JOB");
+  }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.lightBlue[50],
       body: SingleChildScrollView(
@@ -282,7 +372,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
                                                     try {
                                                       FirebaseFirestore.instance
                                                           .collection('jobs')
-                                                          .doc(widget.jobid)
+                                                          .doc(widget.jobId)
                                                           .update(
                                                               {'availability': true});
                                                     } catch (e) {
@@ -326,7 +416,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
                                                     try {
                                                       FirebaseFirestore.instance
                                                           .collection('jobs')
-                                                          .doc(widget.jobid)
+                                                          .doc(widget.jobId)
                                                           .update(
                                                               {'availability': false});
                                                     } catch (e) {
@@ -451,7 +541,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
                                   applyJob(email: email, jobTitle: jobTitle);
                               aply.applyforJob(email!, jobTitle);
                               aply.addApplicant(
-                                  widget.jobid, applicants, context);
+                                  widget.jobId, applicants, context);
                               print(email);
                               print(jobTitle);
                             },
@@ -603,7 +693,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
                                                     await FirebaseFirestore
                                                         .instance
                                                         .collection('jobs')
-                                                        .doc(widget.jobid)
+                                                        .doc(widget.jobId)
                                                         .update({
                                                       'jobcomments':
                                                           FieldValue
@@ -709,7 +799,7 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
                                 : FutureBuilder<DocumentSnapshot>(
                                     future: FirebaseFirestore.instance
                                         .collection('jobs')
-                                        .doc(widget.jobid)
+                                        .doc(widget.jobId)
                                         .get(),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
@@ -774,6 +864,35 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
         ),
       ),
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: IconButton(onPressed: ()async{
+              addfavjob();
+
+            },
+              icon: Icon(
+                isFavorite ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+
+                size: 40,),
+
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: IconButton(onPressed: ()async{
+              removeFavJob();
+
+            },
+              icon: Icon(
+                FontAwesomeIcons.trash,
+
+                size: 40,),
+
+            ),
+          ),
+
+        ],
         elevation: 0,
         backgroundColor: Color.fromRGBO(130, 168, 205, 1),
         leading: IconButton(
@@ -787,8 +906,11 @@ class _Job_DetailsPageState extends State<Job_DetailsPage> {
                 return AdminHome();
               } else {
                 return Job_DetailsPage(
-                  jobid: widget.jobid,
+                  jobId: widget.jobId,
                   uploadedBy: widget.uploadedBy,
+                  jobtitle:  widget.jobtitle,
+                  jobdesc: widget.jobdesc,
+                  dateDuration: widget.dateDuration,
                 );
               }
             }));

@@ -71,7 +71,7 @@ class _AdminJobWidgetState extends State<AdminJobWidget> {
       onTap: ()
       {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
-            Job_DetailsPage(uploadedBy: widget.uploadedBy,jobid: widget.jobId)
+            Job_DetailsPage(uploadedBy: widget.uploadedBy,jobId: widget.jobId, jobdesc: widget.jobdesc, jobtitle: widget.jobtitle, dateDuration: widget.dateDuration,)
         ));
       },
       onLongPress: (){

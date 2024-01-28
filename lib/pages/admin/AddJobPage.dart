@@ -13,19 +13,18 @@ class AddJobPage extends StatefulWidget {
 }
 
 final formKey = GlobalKey<FormState>();
-final TextEditingController dateController=TextEditingController(text: "Date");
-final TextEditingController priceController=TextEditingController(text: "Amount");
+final TextEditingController dateController=TextEditingController(text: "Select Date");
+final TextEditingController priceController=TextEditingController(text: "");
 final TextEditingController jobtitleController=TextEditingController();
 final TextEditingController companynameController=TextEditingController();
 final TextEditingController jobdescController=TextEditingController();
 final TextEditingController pdateController=TextEditingController();
-
+var isValid=false;
+String? imageUrl;
 
 class _AddJobPageState extends State<AddJobPage> {
   final posted=DateTime.now();
-  String? imageUrl;
   DateTime? picked;
-  var isValid=false;
   Future<void> _pickedDate()async{
     picked=await showDatePicker(context: context,
         initialDate: DateTime.now(),
@@ -41,6 +40,31 @@ class _AddJobPageState extends State<AddJobPage> {
       });
     }
   }
+  List<String> developerCategories = <String>[
+    "Front-end Developer",
+    "Back-end Developer",
+    "Full Stack Developer",
+    "Mobile App Developer",
+    "Web Developer",
+    "UI/UX Designer",
+    "Game Developer",
+    "Software Engineer",
+    "DevOps Engineer",
+    "Database Administrator",
+    "Cloud Developer",
+    "Machine Learning Engineer",
+    "Blockchain Developer",
+    "Embedded Systems Developer",
+    "AR/VR Developer",
+    "Data Scientist",
+    "Quality Assurance Engineer",
+    "Cybersecurity Analyst",
+    "Systems Analyst",
+    "Others"
+
+  ];
+  String? selectedCatValue;
+
   void getData()async{
 
 
@@ -48,7 +72,7 @@ class _AddJobPageState extends State<AddJobPage> {
 
     setState(() {
       imageUrl=userDoc.get('userImage');
-      //jobid=userDoc.get('uploadedBy');
+      //jobid=jobDoc.get('uploadedBy');
 
 
     });
@@ -64,11 +88,17 @@ class _AddJobPageState extends State<AddJobPage> {
   Widget build(BuildContext context) {
     User? user=FirebaseAuth.instance.currentUser;
     return Scaffold(
-      backgroundColor: Colors.grey,
-      appBar: AppBar(
+      backgroundColor: Colors.lightBlue[50],
+      appBar: AppBar(elevation: 0,
+        backgroundColor: Color.fromRGBO(130, 168, 205,1),
         toolbarHeight: 80,
         centerTitle: true,
-        title: Text("N E W  J O B"),
+        title: Text("N E W  J O B",style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 25
+        )
+        ),
       ),
       body: Form(
         key: formKey,
@@ -78,7 +108,7 @@ class _AddJobPageState extends State<AddJobPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  height: 700,
+                  height: 720,
                   width: 500,
                   decoration: BoxDecoration(
                     border: Border.all(width: 2),
@@ -121,7 +151,7 @@ class _AddJobPageState extends State<AddJobPage> {
                                   borderRadius: BorderRadius.circular(30)),
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      width: 3, color: Colors.lightBlueAccent),
+                                    width: 3, color: Color.fromRGBO(130, 168, 205,1),),
                                   borderRadius: BorderRadius.circular(30)),
                               border: OutlineInputBorder(
                                   borderSide:
@@ -140,7 +170,7 @@ class _AddJobPageState extends State<AddJobPage> {
                               hintText: "Company Name",
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      width: 3, color: Colors.lightBlueAccent),
+                                    width: 3, color: Color.fromRGBO(130, 168, 205,1),),
                                   borderRadius: BorderRadius.circular(30)),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30))),
@@ -160,7 +190,7 @@ class _AddJobPageState extends State<AddJobPage> {
                               hintText: "Job Description",
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      width: 3, color: Colors.lightBlueAccent),
+                                    width: 3, color: Color.fromRGBO(130, 168, 205,1),),
                                   borderRadius: BorderRadius.circular(30)),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30))),
@@ -176,27 +206,28 @@ class _AddJobPageState extends State<AddJobPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Fixed Price",
+                                  "Payment Range",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w600, fontSize: 18),
+                                      fontWeight: FontWeight.w600, fontSize: 16,color: Colors.white),
                                 ),
                                 SizedBox(
                                     height: 40,
                                     width: 100,
                                     child: TextFormField(
+
+                                      keyboardType: TextInputType.numberWithOptions(),
                                       controller: priceController,
                                       decoration: InputDecoration(
                                           border: OutlineInputBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(30))),
+                                          )),
                                     ))
                               ],
                             ),
                             width: 145,
                             height: 80,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
-                                color: Colors.lightBlueAccent),
+                              borderRadius: BorderRadius.circular(18),
+                              color: Color.fromRGBO(130, 168, 205,1),),
                           ),
                         ),
                         GestureDetector(
@@ -211,7 +242,7 @@ class _AddJobPageState extends State<AddJobPage> {
                                 children: [
                                   Text(
                                     "Duration",
-                                    style: TextStyle(
+                                    style: TextStyle(color: Colors.white,
                                         fontWeight: FontWeight.w600, fontSize: 18),
                                   ),
                                   SizedBox(
@@ -222,20 +253,17 @@ class _AddJobPageState extends State<AddJobPage> {
 
                                         controller: dateController,
                                         decoration: InputDecoration(
-                                            disabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(30)),
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(30))),
+
+                                            border: OutlineInputBorder()
+                                        ),
                                       ))
                                 ],
                               ),
                               width: 145,
                               height: 80,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(18),
-                                  color: Colors.lightBlueAccent),
+                                borderRadius: BorderRadius.circular(18),
+                                color: Color.fromRGBO(130, 168, 205,1),),
                             ),
                           ),
                         )
@@ -245,7 +273,7 @@ class _AddJobPageState extends State<AddJobPage> {
                 ),
               ),
               Positioned(
-                  bottom: 50,
+                  bottom: 15,
                   left: 40,
                   child: InkWell(
                     onTap: (){
@@ -257,12 +285,12 @@ class _AddJobPageState extends State<AddJobPage> {
                             uid: user!.uid,
                             valid: isValid,
                             jobtitle:jobtitleController.text,
-                          jobdesc:jobdescController.text,
-                          duration:dateController.text,
-                          deaddate:dateController.text,
-                          postdate:pdateController.text,
-                          pricerange: priceController.text
-
+                            jobdesc:jobdescController.text,
+                            duration:dateController.text,
+                            deaddate:dateController.text,
+                            postdate:pdateController.text,
+                            pricerange:priceController.text,
+                            cat: selectedCatValue
                         );
                       });
 
@@ -271,16 +299,59 @@ class _AddJobPageState extends State<AddJobPage> {
                       width: 350,
                       height: 60,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.lightBlueAccent),
+                        borderRadius: BorderRadius.circular(20),
+                        color: Color.fromRGBO(130, 168, 205,1),),
                       child: Center(
                         child: Text(
-                          "P O S T",
-                          style: TextStyle(fontSize: 20),
+                            "P O S T",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20
+                            )
                         ),
                       ),
                     ),
-                  ))
+                  )),
+              Positioned(
+                  bottom: 90, left: 20, child:
+              Container(
+
+
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xFF81D4FA), width: 3),
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Categories:  ",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    DropdownButton(
+                      value: selectedCatValue,
+                      items: developerCategories.map<DropdownMenuItem<String>>(
+                            (String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (String? newvalue) {
+                        setState(() {
+                          selectedCatValue = newvalue;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              )
+
+
+              ),
             ],
           ),
         ),

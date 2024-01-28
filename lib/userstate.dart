@@ -4,6 +4,7 @@ import 'package:devjobs/pages/employer/HomePage.dart';
 import 'package:devjobs/pages/employer/Navigation.dart';
 import 'package:devjobs/pages/freelancer/Home.dart';
 import 'package:devjobs/pages/freelancer/HomePage.dart';
+import 'package:devjobs/services/common/NotificationService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,10 @@ class _UserStateState extends State<UserState> {
   @override
   void initState() {
     super.initState();
+
+
     checkUser();
+
   }
 
   Future<void> checkUser() async {

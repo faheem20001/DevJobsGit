@@ -57,8 +57,7 @@ class _AdminHomeState extends State<AdminHome> {
                     onTap: (){
                       Navigator.of(context).push(MaterialPageRoute(builder: (context)
                       {
-                      return AddJobPage(
-                      );
+                      return AddJobPage();
                       }
                       )
                       )

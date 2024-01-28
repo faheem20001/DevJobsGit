@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:devjobs/services/common/NotificationProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,7 @@ final TextEditingController jobdescController=TextEditingController();
 final TextEditingController pdateController=TextEditingController();
 var isValid=false;
 String? imageUrl;
+NotificationProvider notificationProvider=NotificationProvider();
 
 class _NewJobPageState extends State<NewJobPage> {
 final posted=DateTime.now();
@@ -40,6 +42,31 @@ final posted=DateTime.now();
       });
     }
   }
+List<String> developerCategories = <String>[
+  "Front-end Developer",
+  "Back-end Developer",
+  "Full Stack Developer",
+  "Mobile App Developer",
+  "Web Developer",
+  "UI/UX Designer",
+  "Game Developer",
+  "Software Engineer",
+  "DevOps Engineer",
+  "Database Administrator",
+  "Cloud Developer",
+  "Machine Learning Engineer",
+  "Blockchain Developer",
+  "Embedded Systems Developer",
+  "AR/VR Developer",
+  "Data Scientist",
+  "Quality Assurance Engineer",
+  "Cybersecurity Analyst",
+  "Systems Analyst",
+  "Others"
+
+];
+String? selectedCatValue;
+
 void getData()async{
 
 
@@ -83,7 +110,7 @@ void initState() {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  height: 700,
+                  height: 720,
                   width: 500,
                   decoration: BoxDecoration(
                     border: Border.all(width: 2),
@@ -248,10 +275,11 @@ void initState() {
                 ),
               ),
               Positioned(
-                  bottom: 50,
+                  bottom: 15,
                   left: 40,
                   child: InkWell(
                     onTap: (){
+
                       setState(() {
                         isValid=formKey.currentState!.validate();
                         uploadJob upljob=uploadJob();
@@ -264,7 +292,8 @@ void initState() {
                             duration:dateController.text,
                             deaddate:dateController.text,
                             postdate:pdateController.text,
-                          pricerange:priceController.text
+                          pricerange:priceController.text,
+                          cat: selectedCatValue
                         );
                       });
 
@@ -286,7 +315,46 @@ void initState() {
                         ),
                       ),
                     ),
-                  ))
+                  )),
+              Positioned(
+                  bottom: 90, left: 20, child:
+              Container(
+
+
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xFF81D4FA), width: 3),
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Categories:  ",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    DropdownButton(
+                      value: selectedCatValue,
+                      items: developerCategories.map<DropdownMenuItem<String>>(
+                            (String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (String? newvalue) {
+                        setState(() {
+                          selectedCatValue = newvalue;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              )
+
+
+              ),
             ],
           ),
         ),

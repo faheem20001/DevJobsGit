@@ -29,7 +29,8 @@ class UserService {
           "id":id,
           "name":user.name??"Guest",
           "usertype":user.userType,
-          "phone":user.phone
+          "phone":user.phone,
+          "cat":user.cat
 
 
         }
