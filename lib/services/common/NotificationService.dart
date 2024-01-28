@@ -123,7 +123,7 @@ firebaseInit();
 
       await _flutterLocalNotificationsPlugin.show(
         0,
-        'New Data Available',
+        'New Job Available',
         'Check out the latest jobs!',
         notificationDetails,
       );

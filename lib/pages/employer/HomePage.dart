@@ -162,7 +162,22 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Colors.white),
         ),
       ),
-      body:  CustomScrollView(
+      body:RefreshIndicator(
+        onRefresh: () {
+    return Future.delayed(Duration(seconds: 1),
+    (){
+    setState(() {
+    getAllJobs();
+    });
+
+    }
+
+    );
+
+
+
+    },
+      child:CustomScrollView(
 
         slivers: [
           SliverAppBar(
@@ -347,6 +362,6 @@ class _HomePageState extends State<HomePage> {
 
 
       ),
-    );
+    ));
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devjobs/pages/employer/FavJobs.dart';
 import 'package:devjobs/pages/employer/NewJob.dart';
@@ -19,6 +21,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  NotificationService notificationService=NotificationService();
+  int previousResultListLength=0;
   var loadjob;
   String? email;
   String? imageUrl;
@@ -30,8 +34,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
+
     super.initState();
-    getAllJobs();
+    Timer.periodic(Duration(seconds: 5), (timer) {
+      getAllJobs();
+    });
+
+
     _searchController.addListener(_onsearchChanged);
     getData();
   }
@@ -83,6 +92,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    if (_resultList.length > previousResultListLength) {
+      notificationService.shownotificationForNewData();
+      getAllJobs();
+      previousResultListLength = _resultList.length; // Update the previous length
+    }
     User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
@@ -250,6 +264,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             );
                           },
                         ),
+
                       ),
                     ],
                   ),

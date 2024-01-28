@@ -15,9 +15,11 @@ class JobsForMe extends StatefulWidget {
 }
 
 class _JobsForMeState extends State<JobsForMe> {
+  int previousResultListLength=0;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? usercat;
   NotificationService notificationService=NotificationService();
+
   void getData() async {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -37,6 +39,7 @@ class _JobsForMeState extends State<JobsForMe> {
     }
 
   }
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +48,7 @@ class _JobsForMeState extends State<JobsForMe> {
   }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
 
@@ -72,6 +76,7 @@ class _JobsForMeState extends State<JobsForMe> {
             );
           } else if (snapshot.connectionState == ConnectionState.active) {
             if (snapshot.data?.docs.isNotEmpty == true) {
+              notificationService.shownotificationForNewData();
 
 
 
