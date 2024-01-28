@@ -162,70 +162,102 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Hey! ${email}",
-                        style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
-                      ),
-                    ],
+      body: RefreshIndicator(
+        onRefresh: () {
+          return Future.delayed(Duration(seconds: 1),
+                  (){
+                setState(() {
+                  getAllJobs();
+                });
+
+              }
+
+          );
+
+
+
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Hey! ${email}",
+                          style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Container(
-                      width: 380,
-                      child: TextFormField(
-                        controller: _searchController,
-                        validator: (value) {},
-                        decoration: InputDecoration(
-                          hintText: 'Search here',
-                          prefixIcon: Icon(Icons.search_outlined),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromRGBO(130, 168, 205, 1), width: 3),
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF81D4FA), width: 3),
-                            borderRadius: BorderRadius.circular(40),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        width: 380,
+                        child: TextFormField(
+                          controller: _searchController,
+                          validator: (value) {},
+                          decoration: InputDecoration(
+                            hintText: 'Search here',
+                            prefixIcon: Icon(Icons.search_outlined),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color.fromRGBO(130, 168, 205, 1), width: 3),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF81D4FA), width: 3),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Column(
-                  children: [
-                    ListView.builder(
-                      physics: ScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: _resultList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return JobWidget(
-                          jobId: _resultList[index]['jobid'],
-                          jobtitle: _resultList[index]['Job Title'],
-                          jobdesc: _resultList[index]['Job Description'],
-                          dateDuration: _resultList[index]['Duration'],
-                          uploadedBy: _resultList[index]['uploadedBy'],
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                  Column(
+                    children: [
+                      RefreshIndicator(
+                        onRefresh: () {
+                         return Future.delayed(Duration(seconds: 1),
+                             (){
+                           setState(() {
+                             getAllJobs();
+                           });
+
+                             }
+
+                         );
+
+
+
+                        },
+                        child: ListView.builder(
+                         physics: const AlwaysScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: _resultList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return JobWidget(
+                              jobId: _resultList[index]['jobid'],
+                              jobtitle: _resultList[index]['Job Title'],
+                              jobdesc: _resultList[index]['Job Description'],
+                              dateDuration: _resultList[index]['Duration'],
+                              uploadedBy: _resultList[index]['uploadedBy'],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
